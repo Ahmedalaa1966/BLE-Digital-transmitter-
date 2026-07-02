@@ -9,7 +9,7 @@ module IIR_2 # (
    input logic i_iir_en,
    input logic signed [INPUT_WIDTH-1:0] i_iir,
 
-   output logic signed [INPUT_WIDTH+6-1:0] o_iir        // DCO tuning word  
+   output logic signed [INPUT_WIDTH+6-1:0] o_iir       
 
 );
 
@@ -40,15 +40,15 @@ module IIR_2 # (
     always_ff @(posedge i_clk or negedge i_rst_n ) begin  
      
      if(!i_rst_n) begin 
-     // o_iir   <= 0 ; 
+    
      previous_o_iir_ext <= 0;
        end
      else if(i_iir_en) begin
-     // o_iir <= iir_next;       //  24 int , 16 frac 
-      previous_o_iir_ext <= iir_next; //  24 int , 20 frac (full width)
+  
+      previous_o_iir_ext <= iir_next; 
        end
     end
 
-     // output is truncated combinatorially — NOT a register, NO extra pole
+
 
 endmodule
