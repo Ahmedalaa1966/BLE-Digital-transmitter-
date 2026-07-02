@@ -1,0 +1,54 @@
+module IIR_2 # (
+   parameter INPUT_WIDTH = 14,
+   parameter ALPHA_IIR = 4,
+   parameter INT_WIDTH = INPUT_WIDTH + 12 // performing internal calculations with 12 extra fractional bits
+) 
+(
+   input logic i_clk,
+   input logic i_rst_n,
+   input logic i_iir_en,
+   input logic signed [INPUT_WIDTH-1:0] i_iir,
+
+   output logic signed [INPUT_WIDTH+6-1:0] o_iir        // DCO tuning word  
+
+);
+
+//------------------------------Internal signals---------------------------------//
+   logic signed [INT_WIDTH-1:0] i_iir_ext;
+   logic signed [INT_WIDTH-1:0] prop_path;
+   logic signed [INT_WIDTH-1:0] feedback_path;
+   logic signed [INT_WIDTH-1:0] previous_o_iir_ext;
+   logic signed [INT_WIDTH-1:0] iir_next;
+
+//-------------------------------Combinational updates---------------------------//
+
+//--------Proportional path----------// 
+   assign i_iir_ext = signed'({i_iir , 12'd0}) ;     
+
+   assign prop_path = signed'( i_iir_ext >>> ALPHA_IIR );      
+   // prop_path     =    INPUT_WIDTH+6 (20)
+
+//--------feedback path------------//
+   assign feedback_path = previous_o_iir_ext - ( previous_o_iir_ext >>> ALPHA_IIR );
+   
+   assign iir_next = feedback_path + prop_path;
+   
+   assign o_iir = iir_next[INT_WIDTH-1:6];
+
+//------------------------------------ Sequential update---------------------------------//
+
+    always_ff @(posedge i_clk or negedge i_rst_n ) begin  
+     
+     if(!i_rst_n) begin 
+     // o_iir   <= 0 ; 
+     previous_o_iir_ext <= 0;
+       end
+     else if(i_iir_en) begin
+     // o_iir <= iir_next;       //  24 int , 16 frac 
+      previous_o_iir_ext <= iir_next; //  24 int , 20 frac (full width)
+       end
+    end
+
+     // output is truncated combinatorially — NOT a register, NO extra pole
+
+endmodule
