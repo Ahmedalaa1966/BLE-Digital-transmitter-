@@ -44,13 +44,25 @@ This folder contains the actual hardware description language (HDL) source code 
 - **Upsampler** – RTL implementation of the upsampling block, used to increase the data rate/sample rate to match the required processing or output rate.
 
 ### 📁 Simulation
-This folder mirrors the structure of the RTL Implementation folder: it contains a **separate subfolder for each block** (ADPLL Integration, Control Unit, DCO, Gaussian Filter, IIR Filter, LMS, Loop Filter, NRZ, Outside ADPLL Integration, Sigma Delta, TDC, Upsampler) holding the testbenches, simulation scripts, and results used to verify that specific block in isolation. In addition, there is a **System Integration** subfolder containing the testbenches and simulation results used to verify the complete, fully integrated transmitter design once all blocks are combined.
+This folder contains the testbenches, simulation scripts, and simulation results used to verify the design. It is organized into a **separate subfolder for each block being simulated**:
+
+- **DCO** – simulation of the Digitally Controlled Oscillator's behavior/output.
+- **Gaussian Filter** – simulation of the Gaussian pulse-shaping filter's response.
+- **Loop Filter** – simulation of the ADPLL's digital loop filter behavior.
+- **Sigma Delta** – simulation of the Sigma-Delta modulator's output/dithering behavior.
+- **TDC** – simulation of the Time-to-Digital Converter's phase-error measurement.
+- **System Simulation** – simulation of the complete, fully integrated transmitter, verifying end-to-end behavior once all the individual blocks are combined.
+
+Note: not every block from the RTL Implementation/System Modeling folders necessarily has its own simulation subfolder — only the blocks that require dedicated, standalone verification are broken out here, in addition to the overall System Simulation.
 
 ### 📁 System Modeling
 This folder contains high-level behavioral/algorithmic models (e.g., MATLAB/Python/Simulink) of the transmitter, used to validate design concepts before committing to RTL. Just like the RTL Implementation and Simulation folders, it is organized into a **separate subfolder per block** (ADPLL Integration, Control Unit, DCO, Gaussian Filter, IIR Filter, LMS, Loop Filter, NRZ, Outside ADPLL Integration, Sigma Delta, TDC, Upsampler), allowing each block's behavior (e.g., modulation, filtering, oscillator behavior) to be modeled and validated independently. A **System Integration** subfolder contains the combined high-level model of the entire transmitter, used to validate overall system-level performance (e.g., end-to-end modulation accuracy, loop stability, timing) before RTL implementation begins.
 
 ### 📁 Text Books
-Reference textbooks and course material related to BLE, wireless communication, digital design, and RF systems used throughout the project.
+Reference textbooks, tutorials, and technical documents related to all-digital PLL (ADPLL) design and digital frequency synthesis, used as the theoretical foundation for this project. Current references include:
+
+- *All-Digital Frequency Synthesizer in Deep-Submicron CMOS* — a core reference textbook on ADPLL-based frequency synthesis techniques.
+- *Staszewski, Hu, Siriburanon — CICC Tutorial 2020: Beyond All-Digital PLL* — a tutorial covering advanced/beyond-conventional ADPLL design techniques.
 
 ### 📁 Thesis
 The full thesis document (or drafts of it) associated with this project, consolidating the motivation, design, implementation, results, and conclusions of the work.
